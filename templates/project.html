@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <span class="project-stage stage-{{ project.stage }}">{{ project.stage }}</span>
+            {% if project.completed %}
+            <span class="badge badge-green">🏆 Completed</span>
+            {% endif %}
+        </div>
+        <h1>{{ project.title }}</h1>
+        <p style="color: var(--gray-400);">by {{ project.owner.username }}</p>
+    </div>
+    
+    {% if is_owner and not project.completed %}
+    <a href="{{ url_for('complete_project', id=project.id) }}" class="btn btn-primary">
+        ✅ Mark Complete
+    </a>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <div>
+        <div class="card mb-6">
+            <div class="card-body">
+                <p style="color: var(--gray-300); line-height: 1.8; font-size: 1.1rem;">
+                    {{ project.description }}
+                </p>
+                
+                {% if project.support_needed %}
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px;">
+                    <strong style="color: var(--primary); display: block; margin-bottom: 0.5rem;">🤝 Looking for collaborators:</strong>
+                    <span style="color: var(--gray-300);">{{ project.support_needed }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Progress Updates</h2>
+        
+        {% if is_owner or is_collaborating %}
+        <form method="POST" class="card mb-6">
+            <div class="card-body">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <textarea name="update" class="form-textarea" placeholder="Share your latest progress..." rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Add Update</button>
+            </div>
+        </form>
+        {% endif %}
+        
+        {% if updates %}
+        <div class="timeline">
+            {% for update in updates %}
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-meta">
+                        <span style="font-weight: 600; color: var(--white);">{{ update.author.username }}</span>
+                        <span>•</span>
+                        <span>{{ update.created_at.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <p style="color: var(--gray-300); line-height: 1.7;">{{ update.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" style="padding: 2rem;">
+            <p>No updates yet. {% if is_owner %}Start sharing your progress!{% endif %}</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">Collaborators</h3>
+                <span class="badge badge-green">{{ collaborators|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if collaborators %}
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    {% for collab in collaborators %}
+                    <div class="project-owner">
+                        <div class="owner-avatar">{{ collab.username[0]|upper }}</div>
+                        <span>{{ collab.username }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--gray-500); text-align: center;">No collaborators yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Comments</h3>
+                <span class="badge badge-green">{{ comments|length }}</span>
+            </div>
+            <div class="card-body">
+                {% if comments %}
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    {% for comment in comments %}
+                    <div class="comment" style="margin-bottom: 0;">
+                        <div class="owner-avatar" style="flex-shrink: 0;">{{ comment.author.username[0]|upper }}</div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-author">{{ comment.author.username }}</span>
+                                <span class="comment-time">{{ comment.created_at.strftime('%b %d') }}</span>
+                            </div>
+                            <p class="comment-text">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--gray-500); text-align: center;">No comments yet</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

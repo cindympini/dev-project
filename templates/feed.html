@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Community Feed 🔥</h1>
+        <p>See what developers are building right now</p>
+    </div>
+</div>
+
+{% if projects %}
+<div style="max-width: 800px;">
+    {% for item in projects %}
+    <div class="feed-project">
+        <div class="project-owner">
+            <div class="owner-avatar">{{ item.owner.username[0]|upper }}</div>
+            <div>
+                <div style="font-weight: 600;">{{ item.owner.username }}</div>
+                <div style="font-size: 0.875rem; color: var(--gray-500);">{{ item.project.created_at.strftime('%b %d, %Y') }}</div>
+            </div>
+            <span class="project-stage stage-{{ item.project.stage }}" style="margin-left: auto;">{{ item.project.stage }}</span>
+        </div>
+        
+        <a href="{{ url_for('project', id=item.project.id) }}" style="font-size: 1.5rem; font-weight: 700; color: var(--white); text-decoration: none; display: block; margin-bottom: 0.5rem;">
+            {{ item.project.title }}
+        </a>
+        
+        <p style="color: var(--gray-400); line-height: 1.7; margin-bottom: 1rem;">{{ item.project.description }}</p>
+        
+        {% if item.project.support_needed %}
+        <div style="padding: 0.75rem 1rem; background: rgba(34, 197, 94, 0.05); border-radius: 8px; font-size: 0.875rem; color: var(--gray-400); margin-bottom: 1rem;">
+            <strong style="color: var(--primary);">Looking for:</strong> {{ item.project.support_needed }}
+        </div>
+        {% endif %}
+        
+        <div class="feed-actions">
+            <span style="color: var(--gray-500); font-size: 0.875rem;">📝 {{ item.update_count }} updates</span>
+            <span style="color: var(--gray-500); font-size: 0.875rem;">💬 {{ item.comment_count }} comments</span>
+            <span style="color: var(--gray-500); font-size: 0.875rem;">🤝 {{ item.collab_count }} collaborators</span>
+            
+            {% if item.project.user_id != current_user.id %}
+            <a href="{{ url_for('collaborate', project_id=item.project.id) }}" class="btn btn-outline btn-sm" style="margin-left: auto;">
+                🤝 Collaborate
+            </a>
+            {% endif %}
+        </div>
+        
+        <form method="POST" class="feed-comment-form" style="display: flex; gap: 0.75rem;">
+            <input type="hidden" name="project_id" value="{{ item.project.id }}">
+            <input type="text" name="comment" class="form-input" placeholder="Add a comment..." style="flex: 1;">
+            <button type="submit" class="btn btn-primary btn-sm">Post</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">🔥</div>
+    <h3>No projects yet</h3>
+    <p>Be the first to create a project and start building in public!</p>
+    <a href="{{ url_for('create_project') }}" class="btn btn-primary mt-4">Create Project</a>
+</div>
+{% endif %}
+{% endblock %}

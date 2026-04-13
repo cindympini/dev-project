@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Celebration Wall{% endblock %}
+
+{% block content %}
+<div class="page-header" style="text-align: center; flex-direction: column; align-items: center;">
+    <h1>🏆 Celebration Wall</h1>
+    <p style="color: var(--gray-400);">Developers who shipped. Legends who built in public.</p>
+</div>
+
+{% if projects %}
+<div class="celebration-grid">
+    {% for item in projects %}
+    <div class="celebration-card">
+        <div class="trophy">🏆</div>
+        <h3>{{ item.project.title }}</h3>
+        <p class="owner">by {{ item.owner.username }}</p>
+        
+        {% if item.collaborators %}
+        <div style="margin-top: 1.5rem;">
+            <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">Collaborators</p>
+            <div class="collaborators-list">
+                {% for collab in item.collaborators %}
+                <span class="collaborator-badge">{{ collab.username }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(34, 197, 94, 0.2);">
+            <p style="font-size: 0.875rem; color: var(--gray-500);">
+                Completed {{ item.project.completed_at.strftime('%b %d, %Y') }}
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">🏆</div>
+    <h3>No completed projects yet</h3>
+    <p>Be the first to complete a project and join the wall!</p>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-4">View My Projects</a>
+</div>
+{% endif %}
+{% endblock %}

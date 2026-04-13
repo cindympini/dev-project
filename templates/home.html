@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span>🚀</span>
+            Build in Public Movement
+        </div>
+        
+        <h1>Ship Projects.<br>Grow Together.<br><span class="text-gradient">Celebrate Wins.</span></h1>
+        
+        <p class="hero-description">
+            Join a community of developers building projects in public. Share your progress, 
+            find collaborators, and get added to the Celebration Wall when you ship.
+        </p>
+        
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                Start Building 🚀
+            </a>
+            <a href="{{ url_for('feed') }}" class="btn btn-secondary btn-lg">
+                Explore Feed 🔥
+            </a>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ total_projects }}</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ completed_projects }}</span>
+                <span class="stat-label">Shipped</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ total_devs }}</span>
+                <span class="stat-label">Developers</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <div class="section-header">
+            <h2>Everything You Need to <span class="text-gradient">Build in Public</span></h2>
+            <p>Powerful features designed for makers who ship</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Project Tracking</h3>
+                <p>Create and manage your projects with stages, descriptions, and support requirements. Keep everything organized in one place.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progress Updates</h3>
+                <p>Share milestones and updates as you build. Keep your followers engaged with your journey from idea to launch.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Collaboration</h3>
+                <p>Find collaborators for your projects or join others. Connect with developers who complement your skills.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Live Feed</h3>
+                <p>See what the community is building in real-time. Comment, support, and learn from other makers.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Celebration Wall</h3>
+                <p>Get recognized when you complete projects. Join the hall of fame for builders who ship.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-time</h3>
+                <p>Socket-powered live updates. See new projects and comments instantly without refreshing.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

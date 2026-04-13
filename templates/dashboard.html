@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>My Dashboard</h1>
+        <p>Manage your projects and collaborations</p>
+    </div>
+    <a href="{{ url_for('create_project') }}" class="btn btn-primary">
+        + New Project
+    </a>
+</div>
+
+{% if projects %}
+<h2 class="mb-4" style="font-size: 1.25rem; color: var(--gray-400);">My Projects</h2>
+<div class="projects-grid mb-6">
+    {% for project in projects %}
+    <div class="project-card">
+        <div class="project-header">
+            <span class="project-stage stage-{{ project.stage }}">{{ project.stage }}</span>
+            {% if project.completed %}
+            <span class="badge badge-green">✅ Completed</span>
+            {% endif %}
+        </div>
+        
+        <a href="{{ url_for('project', id=project.id) }}" class="project-title">{{ project.title }}</a>
+        <p class="project-description">{{ project.description }}</p>
+        
+        {% if project.support_needed %}
+        <div style="margin: 1rem 0; padding: 0.75rem; background: rgba(34, 197, 94, 0.05); border-radius: 8px; font-size: 0.875rem; color: var(--gray-400);">
+            <strong style="color: var(--primary);">Looking for:</strong> {{ project.support_needed }}
+        </div>
+        {% endif %}
+        
+        <div class="project-meta">
+            <span>📝 {{ project.updates|length }} updates</span>
+            <span>💬 {{ project.comments|length }} comments</span>
+            <span>🤝 {{ project.collaborations|length }} collaborators</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">🚀</div>
+    <h3>No projects yet</h3>
+    <p>Start by creating your first project and build in public!</p>
+    <a href="{{ url_for('create_project') }}" class="btn btn-primary mt-4">Create Project</a>
+</div>
+{% endif %}
+
+{% if collab_projects %}
+<h2 class="mb-4" style="font-size: 1.25rem; color: var(--gray-400);">Collaborating On</h2>
+<div class="projects-grid">
+    {% for project in collab_projects %}
+    <div class="project-card" style="border-color: rgba(34, 197, 94, 0.3);">
+        <div class="project-owner">
+            <div class="owner-avatar">{{ project.owner.username[0]|upper }}</div>
+            <span style="color: var(--gray-400);">by {{ project.owner.username }}</span>
+        </div>
+        
+        <a href="{{ url_for('project', id=project.id) }}" class="project-title">{{ project.title }}</a>
+        <p class="project-description">{{ project.description }}</p>
+        
+        <span class="project-stage stage-{{ project.stage }}">{{ project.stage }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

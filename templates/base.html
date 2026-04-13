@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DevHub{% endblock %} - Build in Public</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <div class="nav-logo-icon">🚀</div>
+                <span>DevHub</span>
+            </a>
+            
+            {% if current_user.is_authenticated %}
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    📊 Dashboard
+                </a></li>
+                <li><a href="{{ url_for('feed') }}" class="{% if request.endpoint == 'feed' %}active{% endif %}">
+                    🔥 Feed
+                </a></li>
+                <li><a href="{{ url_for('celebration') }}" class="{% if request.endpoint == 'celebration' %}active{% endif %}">
+                    🏆 Celebrations
+                </a></li>
+            </ul>
+            
+            <div class="nav-user">
+                <span class="nav-username">👋 {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-ghost btn-sm">Logout</a>
+            </div>
+            {% else %}
+            <div class="nav-user">
+                <a href="{{ url_for('login') }}" class="btn btn-ghost btn-sm">Sign In</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {% if category == 'success' %}✅{% elif category == 'error' %}❌{% else %}ℹ️{% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>
